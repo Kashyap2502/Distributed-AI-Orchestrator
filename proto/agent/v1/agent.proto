@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package orchestrator.agent.v1;
+
+option go_package = "github.com/ai-orchestrator/service/gen/agent/v1;agentv1";
+
+service AgentRuntime {
+  rpc ExecuteTask(TaskRequest) returns (stream TaskEvent);
+  rpc CancelTask(CancelTaskRequest) returns (CancelTaskResponse);
+  rpc Health(HealthRequest) returns (HealthResponse);
+}
+
+message TaskRequest {
+  string task_id = 1;
+  string run_id = 2;
+  string capability = 3;
+  string prompt = 4;
+  string context_json = 5;
+  uint32 attempt = 6;
+}
+
+message TaskEvent {
+  oneof event {
+    TaskProgress progress = 1;
+    TaskResult result = 2;
+  }
+}
+
+message TaskProgress {
+  string message = 1;
+  uint32 percent = 2;
+}
+
+message TaskResult {
+  string output = 1;
+  string error = 2;
+  bool retryable = 3;
+}
+
+message CancelTaskRequest {
+  string task_id = 1;
+}
+
+message CancelTaskResponse {
+  bool accepted = 1;
+}
+
+message HealthRequest {}
+
+message HealthResponse {
+  bool ready = 1;
+  string capability = 2;
+}
