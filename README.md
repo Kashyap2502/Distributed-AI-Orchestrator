@@ -6,7 +6,7 @@ Go control plane and Python worker starter for an asynchronous AI task orchestra
 
 The service accepts a prompt, stores a run and task in PostgreSQL, writes a transactional outbox event, and returns `202 Accepted`. A background publisher sends durable messages to RabbitMQ. The Python worker consumes them and reports a placeholder result to the Go API. Clients poll the run by ID.
 
-This is an infrastructure MVP, not yet a production AI service: the worker does not call an LLM, the planner does not decompose prompts, only the `logical` queue exists, and gRPC is not wired. The internal worker callback currently uses HTTP. These are the next milestones after proving the durable asynchronous path.
+
 
 ## Run Locally
 
